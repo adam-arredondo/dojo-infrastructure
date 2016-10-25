@@ -1,0 +1,12 @@
+{
+  "aws_access_key": "",
+  "aws_secret_key": "",
+  "Maintainer": "Adam Arredondo",
+  "Purpose": "Logstash endpoint for system and application logs",
+  "Name": "Logstash",
+  "Version": "1",
+  "Version Notes":"Based on version 6 Flex-Logstash",
+  "Environment":"Production",
+  "vpc_id": "vpc-0c0c2969",
+  "subnet_id": "subnet-01ac102a"
+}

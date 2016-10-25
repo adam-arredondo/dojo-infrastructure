@@ -1,0 +1,12 @@
+{
+  "aws_access_key": "",
+  "aws_secret_key": "",
+  "Maintainer": "Adam Arredondo",
+  "Purpose": "Nginx base image",
+  "Name": "Flex-Nginx",
+  "Version": "2",
+  "Version Notes":"Nginx install with self signed cert and reverse proxy settings",
+  "Environment":"Development",
+  "vpc_id": "vpc-ea1db88d",
+  "subnet_id": "subnet-a5b7f9fd"
+}

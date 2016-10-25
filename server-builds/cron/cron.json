@@ -1,0 +1,54 @@
+{
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "us-east-1",
+    "source_ami": "",
+    "instance_type": "t2.micro",
+    "ssh_username": "ec2-user",
+    "vpc_id": "{{user `vpc_id`}}",
+    "subnet_id": "{{user `subnet_id`}}",
+    "associate_public_ip_address": true,
+    "ami_description": "Imports cronjob schedules and required files/tools",
+    "ami_name": "{{user `Name`}}-{{user `Version`}}",
+    "launch_block_device_mappings":[
+      {
+        "device_name": "/dev/xvdb",
+        "volume_size": 100,
+        "volume_type": "gp2",
+        "delete_on_termination": true
+      }
+    ],
+      "tags": {
+        "Name": "{{user `Name`}}",
+        "Maintainer": "{{user `Maintainer`}}",
+        "Purpose": "{{user `Purpose`}}",
+        "Environment": "{{user `Environment`}}",
+        "Version": "{{user `Version`}}",
+        "Created": "{{isotime \"2006-01-02\"}}"
+      }
+  }],
+  "provisioners": [
+    {
+    "type": "file",
+      "source": "./files/cronjobs",
+      "destination": "/home/ec2-user"
+    },
+    {
+    "type": "file",
+      "source": "./files/enabled_epel",
+      "destination": "/home/ec2-user/enabled_epel"
+    },
+    {
+    "type": "shell",
+    "scripts": [
+      "./provisoners/update_system.sh",
+      "./provisoners/change_timezone.sh",
+      "./provisoners/create_ebsFileSystem.sh",
+      "./provisoners/install_utilities.sh",
+      "./provisoners/create_cronjobs.sh"
+      ]
+    }
+  ]
+}

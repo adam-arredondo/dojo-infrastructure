@@ -1,0 +1,12 @@
+{
+  "aws_access_key": "",
+  "aws_secret_key": "",
+  "Maintainer": "Adam Arredondo",
+  "Purpose": "Nginx base image",
+  "Name": "Nginx",
+  "Version": "1",
+  "Version Notes":"Base image with just nginx install and system utilities",
+  "Environment":"Production",
+  "vpc_id": "vpc-0c0c2969",
+  "subnet_id": "subnet-01ac102a"
+}

@@ -1,0 +1,32 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+  become: yes
+  become_user: root
+  tasks:
+  - name: upgrade all packages
+    yum: name=* state=latest
+  # Download and install the public elasticsearch signing key
+  - rpm_key:
+      state: present
+      key: https://packages.elastic.co/GPG-KEY-elasticsearch
+  - copy: src=/home/ec2-user/files/logstash.repo dest=/etc/yum.repos.d/logstash.repo owner=root mode=0644
+  - name: Install logstash
+    yum:
+      name: logstash
+      state: present
+# Copy logstash config file to config directory to be used by logstash service
+  - copy: src=/home/ec2-user/files/logstash.conf dest=/etc/logstash/conf.d/logstash.conf owner=root mode=0644
+  - name: enable logstash
+    service:
+      name: logstash
+      enabled: yes
+  # System utilities
+  - name: Install HTOP
+    yum:
+      name: htop
+      state: present
+  - name: Install jq
+    yum:
+      name: jq
+      state: present

@@ -1,0 +1,51 @@
+{
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "us-east-1",
+    "source_ami": "",
+    "instance_type": "t2.micro",
+    "ssh_username": "ec2-user",
+    "vpc_id": "{{user `vpc_id`}}",
+    "subnet_id": "{{user `subnet_id`}}",
+    "associate_public_ip_address": true,
+    "ami_description": "Logstash endpoint that forwards to elasticsearch cluster",
+    "ami_name": "{{user `Name`}}-{{user `Version`}}",
+    "launch_block_device_mappings":[
+      {
+        "device_name": "/dev/xvdb",
+        "volume_size": 50,
+        "volume_type": "gp2",
+        "delete_on_termination": true
+      }
+    ],
+      "tags": {
+        "Name": "{{user `Name`}}",
+        "Maintainer": "{{user `Maintainer`}}",
+        "Purpose": "{{user `Purpose`}}",
+        "Environment": "{{user `Environment`}}",
+        "Version": "{{user `Version`}}",
+        "Created": "{{isotime \"2006-01-02\"}}"
+      }
+  }],
+  "provisioners": [
+    {
+    "type": "file",
+      "source": "./files/logstash.conf",
+      "destination": "/home/ec2-user"
+    },
+    {
+    "type": "shell",
+    "scripts": [
+      "./provisoners/update_system.sh",
+      "./provisoners/create_ebsFileSystem.sh",
+      "./provisoners/install_utilities.sh"
+      ]
+    },
+    {
+  "type": "ansible",
+  "playbook_file": "./provisoners/setup.yml"
+    }
+  ]
+}

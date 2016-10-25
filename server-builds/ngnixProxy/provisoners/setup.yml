@@ -1,0 +1,33 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+  become: yes
+  become_user: root
+  tasks:
+  - name: upgrade all packages
+    yum: name=* state=latest
+  # Package Installs
+  - name: Install Nginx
+    yum:
+      name: nginx
+      state: present
+  - name: enable Nginx
+    service:
+      name: nginx
+      enabled: yes
+  ## System utilities
+  - name: Install HTOP
+    yum:
+      name: htop
+      state: present
+  - name: Install jq
+    yum:
+      name: jq
+      state: present
+  # Create Nginx SSL directory
+  - file: path=/etc/nginx/ssl state=directory mode=0755
+  # Copy SSL componets to nginx directory
+  - copy: src=/home/ec2-user/files/ssl/ dest=/etc/nginx/ssl/ owner=root mode=0644
+  # Replace default nginx configs
+  - copy: src=/home/ec2-user/files/nginx.conf dest=/etc/nginx/nginx.conf owner=root mode=0644 backup=yes
+  - copy: src=/home/ec2-user/files/rproxy.conf dest=/etc/nginx/conf.d/rproxy.conf owner=root mode=0644
